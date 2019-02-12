@@ -101,6 +101,16 @@ discord.command(:cat, description: "Gives random cat", usage: 'cat') do |event|
   end
 end
 
+discord.command(:dog, description: "Gives random dog", usage: 'dog') do |event|
+  url = 'https://random.dog/woof.json'
+  uri = URI(url)
+  response = Net::HTTP.get(uri)
+  random_dog = JSON.parse(response)["url"]
+  event.channel.send_embed do |embed|
+   embed.image = Discordrb::Webhooks::EmbedImage.new(url: random_dog)
+  end
+end
+
 discord.command(:classes, description: 'Lists classes', usage: 'classes') do |event|
   message = "Currently available class channels:\n"
   server.channels.select { |c| c.parent_id == CLASS_CATEGORY_ID }.each do |c|
